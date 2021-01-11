@@ -1,5 +1,7 @@
 package com.example.samplebatch.batch;
 
+import java.util.Map;
+
 import com.example.samplebatch.batch.base.BatchBase;
 import com.example.samplebatch.enums.BatchResult;
 
@@ -12,7 +14,7 @@ public class SecondBatch implements BatchBase {
     
     private final Logger logger = LoggerFactory.getLogger(SecondBatch.class);
 
-    public BatchResult execute(Object entity) {
+    public BatchResult execute(Map<String, Object> params) {
         
         logger.info(SecondBatch.class.getSimpleName() + " executed.");
         return BatchResult.SUCCESS;

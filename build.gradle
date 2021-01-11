@@ -29,6 +29,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	compile 'commons-cli:commons-cli:1.4'
+	compile 'com.jcraft:jsch:latest.release'
 }
 
 test {

@@ -40,6 +40,7 @@ public class SampleBatchApplication {
 	}
 
 	public Map<String, Object> parseCommandLine(String... args) throws ParseException {
+
 		Options options = new Options();
 		options.addOption("n", true, "Batch name.");
 
@@ -56,14 +57,13 @@ public class SampleBatchApplication {
 	public void run(String...  args) throws Exception {
 
 		BatchResult batchResult = BatchResult.FAILURE;
-
 		Map<String, Object> params = parseCommandLine(args);
 
 		logger.info("SampleBatchApplication Start");
 		String batchName = ((String) params.get("n")).trim();
 		logger.info("batchName: [" + batchName + "]");
 		
-		batchResult = ((BatchBase) context.getBean(batchName)).execute(null);
+		batchResult = ((BatchBase) context.getBean(batchName)).execute(params);
 		logger.info("SampleBatchApplication：" + batchResult);
 	}
 }
