@@ -30,13 +30,15 @@ public class SampleBatchApplication {
 
 	public static void main(String[] args) {
 		// SpringApplication.run(SampleBatchApplication.class, args);
+		BatchResult batchResult = BatchResult.FAILURE;
 		try (ConfigurableApplicationContext cac = SpringApplication.run(SampleBatchApplication.class)) {
 			SampleBatchApplication app = cac.getBean(SampleBatchApplication.class);
 			logger.info("args: ", (Object[]) args);
-			app.run(args);
+			batchResult = app.run(args);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.exit(batchResult.getCode());
 	}
 
 	public Map<String, Object> parseCommandLine(String... args) throws ParseException {
@@ -54,7 +56,7 @@ public class SampleBatchApplication {
 		return map;
 	}
 
-	public void run(String...  args) throws Exception {
+	public BatchResult run(String...  args) throws Exception {
 
 		BatchResult batchResult = BatchResult.FAILURE;
 		Map<String, Object> params = parseCommandLine(args);
@@ -65,5 +67,6 @@ public class SampleBatchApplication {
 		
 		batchResult = ((BatchBase) context.getBean(batchName)).execute(params);
 		logger.info("SampleBatchApplication：" + batchResult);
+		return batchResult;
 	}
 }
