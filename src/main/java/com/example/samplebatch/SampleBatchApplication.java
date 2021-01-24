@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.example.samplebatch.batch.base.BatchBase;
 import com.example.samplebatch.enums.BatchResult;
+import com.example.samplebatch.util.StopWatch;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -25,20 +26,26 @@ public class SampleBatchApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(SampleBatchApplication.class);
 
+	private static final StopWatch stopWatch = new StopWatch();
+
 	@Autowired
 	private ApplicationContext context;
 
 	public static void main(String[] args) {
 		// SpringApplication.run(SampleBatchApplication.class, args);
 		BatchResult batchResult = BatchResult.FAILURE;
+		stopWatch.start(logger, "SampleBatchApplication");
 		try (ConfigurableApplicationContext cac = SpringApplication.run(SampleBatchApplication.class)) {
 			SampleBatchApplication app = cac.getBean(SampleBatchApplication.class);
 			logger.info("args: ", (Object[]) args);
 			batchResult = app.run(args);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			stopWatch.end(logger, "SampleBatchApplication");
+			logger.info("Result Code: " + batchResult.getCode());
+			System.exit(batchResult.getCode());
 		}
-		System.exit(batchResult.getCode());
 	}
 
 	public Map<String, Object> parseCommandLine(String... args) throws ParseException {
@@ -56,17 +63,19 @@ public class SampleBatchApplication {
 		return map;
 	}
 
-	public BatchResult run(String...  args) throws Exception {
+	public BatchResult run(String... args) throws Exception {
 
 		BatchResult batchResult = BatchResult.FAILURE;
-		Map<String, Object> params = parseCommandLine(args);
-
-		logger.info("SampleBatchApplication Start");
-		String batchName = ((String) params.get("n")).trim();
-		logger.info("batchName: [" + batchName + "]");
-		
-		batchResult = ((BatchBase) context.getBean(batchName)).execute(params);
-		logger.info("SampleBatchApplication：" + batchResult);
+		String batchName = "";
+		try {
+			Map<String, Object> params = parseCommandLine(args);
+			batchName = ((String) params.get("n")).trim();
+			stopWatch.start(logger, batchName);
+			batchResult = ((BatchBase) context.getBean(batchName)).execute(params);
+		} finally {
+			stopWatch.end(logger, batchName);
+			logger.info("batchResult：" + batchResult);
+		}
 		return batchResult;
 	}
 }
