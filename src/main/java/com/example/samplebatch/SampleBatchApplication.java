@@ -74,7 +74,7 @@ public class SampleBatchApplication {
 			batchResult = ((BatchBase) context.getBean(batchName)).execute(params);
 		} finally {
 			stopWatch.end(logger, batchName);
-			logger.info("batchResult：" + batchResult);
+			logger.info(String.format("%s Result：%s", batchName, batchResult));
 		}
 		return batchResult;
 	}
