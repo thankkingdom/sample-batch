@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.1'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'org.springframework.boot' version '2.7.18'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'java'
 }
 
@@ -11,6 +11,10 @@ targetCompatibility = '1.8'
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
+
+ext {
+	set('log4j2.version', '2.22.0')
+}
 
 configurations {
 	compileOnly {
@@ -23,14 +27,13 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
+	implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '3.0.3'
+	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.2.0'
+	implementation group: 'commons-cli', name: 'commons-cli', version: '1.6.0'
+	implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-	compile 'commons-cli:commons-cli:1.4'
-	compile 'com.jcraft:jsch:latest.release'
 }
 
 test {
